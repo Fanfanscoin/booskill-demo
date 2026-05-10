@@ -64,13 +64,43 @@ python scripts\startup_os_db.py license-status --db startup_os.sqlite3
 
 ## 基础使用
 
+首次使用引导：
+
+```powershell
+python scripts\startup_os_db.py first-use-guide --db startup_os.sqlite3
+```
+
 初始化本地数据库：
 
 ```powershell
 python scripts\startup_os_db.py init --db startup_os.sqlite3
 ```
 
-通过一句话调用老板秘书：
+免费版记录客户：
+
+```powershell
+python scripts\startup_os_db.py add-customer --db startup_os.sqlite3 --name "李总" --status "高意向" --next-followup "2026-05-12" --text "做餐饮加盟，预算5万，关心回本周期"
+```
+
+免费版记录员工：
+
+```powershell
+python scripts\startup_os_db.py add-team-member --db startup_os.sqlite3 --name "张三" --role "销售" --text "执行力可以，成交话术弱"
+```
+
+免费版记录任务：
+
+```powershell
+python scripts\startup_os_db.py add-task --db startup_os.sqlite3 --title "周三跟进李总预算" --owner "张三" --due-date "2026-05-12"
+```
+
+查看今日老板简报：
+
+```powershell
+python scripts\startup_os_db.py daily-brief --db startup_os.sqlite3
+```
+
+授权后通过一句话调用老板秘书：
 
 ```powershell
 python scripts\startup_os_db.py assistant-action --db startup_os.sqlite3 --text "今天帮我看看哪些客户需要跟进"

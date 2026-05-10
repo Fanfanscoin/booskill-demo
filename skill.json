@@ -37,11 +37,16 @@
   },
   "default_commands": {
     "init_database": "python scripts/startup_os_db.py init --db startup_os.sqlite3",
+    "first_use_guide": "python scripts/startup_os_db.py first-use-guide --db startup_os.sqlite3",
     "activate_license": "python scripts/startup_os_db.py activate-license --db startup_os.sqlite3 --license-key YOUR_LICENSE_KEY",
     "license_status": "python scripts/startup_os_db.py license-status --db startup_os.sqlite3",
     "export_memory": "python scripts/startup_os_db.py export --db startup_os.sqlite3",
+    "add_customer": "python scripts/startup_os_db.py add-customer --db startup_os.sqlite3 --name \"李总\" --status \"高意向\" --next-followup \"2026-05-12\" --text \"做餐饮加盟，预算5万，关心回本周期\"",
+    "add_team_member": "python scripts/startup_os_db.py add-team-member --db startup_os.sqlite3 --name \"张三\" --role \"销售\" --text \"执行力可以，成交话术弱\"",
+    "add_contact": "python scripts/startup_os_db.py add-contact --db startup_os.sqlite3 --name \"王总\" --relation-type \"朋友\" --text \"懂本地生活投流，可以咨询获客问题\"",
+    "add_task": "python scripts/startup_os_db.py add-task --db startup_os.sqlite3 --title \"周三跟进李总预算\" --owner \"张三\" --due-date \"2026-05-12\"",
     "assistant_action": "python scripts/startup_os_db.py assistant-action --db startup_os.sqlite3 --text \"今天帮我看看哪些客户需要跟进\"",
-    "daily_brief": "python scripts/startup_os_db.py brief --db startup_os.sqlite3",
+    "daily_brief": "python scripts/startup_os_db.py daily-brief --db startup_os.sqlite3",
     "customer_review": "python scripts/startup_os_db.py review-customer --db startup_os.sqlite3 --text \"客户今天说预算太高，下周三再联系\"",
     "team_brief": "python scripts/startup_os_db.py team-brief --db startup_os.sqlite3"
   },
