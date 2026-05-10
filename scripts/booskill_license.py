@@ -35,6 +35,12 @@ COMMERCIAL_COMMANDS = {
     "evening-review",
     "task-followup-brief",
     "tomorrow-priorities",
+    "deep-industry-pack",
+    "customer-followup-strategy",
+    "team-diagnosis-deep",
+    "task-review-chaser",
+    "metric-diagnosis-deep",
+    "knowledge-growth-brief",
 }
 
 
@@ -177,6 +183,8 @@ def core_payload(command, db_path, args, db_export):
         "topic": getattr(args, "topic", None),
         "content_json": getattr(args, "content_json", None),
         "confidence": getattr(args, "confidence", None),
+        "customer_id": getattr(args, "customer_id", None),
+        "industry": getattr(args, "industry", None),
     }
     return {
         "command": command,

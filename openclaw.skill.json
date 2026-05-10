@@ -30,7 +30,13 @@
     "add_task": "python scripts/startup_os_db.py add-task --db startup_os.sqlite3 --title \"周三跟进李总预算\" --owner \"张三\" --due-date \"2026-05-12\"",
     "assistant_action": "python scripts/startup_os_db.py assistant-action --db startup_os.sqlite3 --text \"今天帮我看看哪些客户需要跟进\"",
     "daily_brief": "python scripts/startup_os_db.py daily-brief --db startup_os.sqlite3",
-    "industry_examples": "python scripts/startup_os_db.py industry-examples --db startup_os.sqlite3 --industry \"餐饮\""
+    "industry_examples": "python scripts/startup_os_db.py industry-examples --db startup_os.sqlite3 --industry \"餐饮\"",
+    "deep_industry_pack": "python scripts/startup_os_db.py deep-industry-pack --db startup_os.sqlite3",
+    "customer_followup_strategy": "python scripts/startup_os_db.py customer-followup-strategy --db startup_os.sqlite3",
+    "team_diagnosis_deep": "python scripts/startup_os_db.py team-diagnosis-deep --db startup_os.sqlite3",
+    "task_review_chaser": "python scripts/startup_os_db.py task-review-chaser --db startup_os.sqlite3",
+    "metric_diagnosis_deep": "python scripts/startup_os_db.py metric-diagnosis-deep --db startup_os.sqlite3",
+    "knowledge_growth_brief": "python scripts/startup_os_db.py knowledge-growth-brief --db startup_os.sqlite3"
   },
   "features": [
     "customer_record",
