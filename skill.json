@@ -1,0 +1,87 @@
+{
+  "name": "booskill",
+  "display_name": "BossSkill 商业版",
+  "version": "0.2.0-commercial",
+  "description": "BossSkill 商业版。免费版保留基础客户/团队/任务记录和简单 Web 控制台；授权版开放老板秘书智能判断、行业深度包、持续学习知识库和高级经营诊断。",
+  "entry": "SKILL.md",
+  "language": "zh-CN",
+  "categories": [
+    "startup",
+    "business-coaching",
+    "sales",
+    "team-management",
+    "customer-management",
+    "executive-assistant"
+  ],
+  "resources": {
+    "references": "references",
+    "scripts": "scripts",
+    "agent_metadata": "agents/openai.yaml"
+  },
+  "tools": [
+    {
+      "name": "startup_os_db",
+      "type": "python-script",
+      "path": "scripts/startup_os_db.py",
+      "description": "管理项目、团队、客户、任务、训练记录、经营指标和知识卡片的 SQLite 命令行工具。"
+    },
+    {
+      "name": "startup_os_web",
+      "type": "python-script",
+      "path": "scripts/startup_os_web.py",
+      "description": "本地 Web 管理页面，提供首次引导、项目画像、团队画像、客户画像、任务提醒和 JSON 导出。"
+    }
+  ],
+  "permissions": {
+    "filesystem": "local-skill-directory-and-user-selected-db",
+    "network": "none-required",
+    "database": "sqlite-local"
+  },
+  "default_commands": {
+    "init_database": "python scripts/startup_os_db.py init --db startup_os.sqlite3",
+    "activate_license": "python scripts/startup_os_db.py activate-license --db startup_os.sqlite3 --license-key YOUR_LICENSE_KEY",
+    "license_status": "python scripts/startup_os_db.py license-status --db startup_os.sqlite3",
+    "start_web_admin": "python scripts/startup_os_web.py --db startup_os.sqlite3 --port 8765",
+    "export_memory": "python scripts/startup_os_db.py export --db startup_os.sqlite3",
+    "boss_secretary_brief": "python scripts/startup_os_db.py brief --db startup_os.sqlite3",
+    "assistant_action": "python scripts/startup_os_db.py assistant-action --db startup_os.sqlite3 --text \"张三跟进李总了，李总说预算太高，5月25日再联系\"",
+    "add_contact": "python scripts/startup_os_db.py add-contact --db startup_os.sqlite3 --name \"王总\" --relation-type \"朋友\" --capabilities \"短视频投流,本地生活推广\"",
+    "find_contact": "python scripts/startup_os_db.py find-contact --db startup_os.sqlite3 --keyword \"投流\"",
+    "contact_brief": "python scripts/startup_os_db.py contact-brief --db startup_os.sqlite3",
+    "daily_reminder": "python scripts/startup_os_db.py daily-reminder --db startup_os.sqlite3",
+    "task_review_brief": "python scripts/startup_os_db.py task-review-brief --db startup_os.sqlite3",
+    "reminder_plan": "python scripts/startup_os_db.py reminder-plan --db startup_os.sqlite3",
+    "onboard_project": "python scripts/startup_os_db.py onboard-project --db startup_os.sqlite3 --text \"我做企业经营咨询，客户是初创老板，现在有成交但获客不稳定，团队3个人\"",
+    "onboard_customer": "python scripts/startup_os_db.py onboard-customer --db startup_os.sqlite3 --project-id 1 --name \"李总\" --text \"李总对方案感兴趣，但预算不确定，下周三再聊\"",
+    "review_customer": "python scripts/startup_os_db.py review-customer --db startup_os.sqlite3 --customer-id 1 --text \"李总说预算太高，暂时不考虑，5月20日再联系\"",
+    "team_brief": "python scripts/startup_os_db.py team-brief --db startup_os.sqlite3",
+    "update_customer": "python scripts/startup_os_db.py update-customer --db startup_os.sqlite3 --customer-id 1 --status \"高意向\"",
+    "create_customer_task": "python scripts/startup_os_db.py create-customer-task --db startup_os.sqlite3 --customer-id 1",
+    "add_task_text": "python scripts/startup_os_db.py add-task-text --db startup_os.sqlite3 --text \"提醒张三明天跟进李总预算\"",
+    "review_task": "python scripts/startup_os_db.py review-task --db startup_os.sqlite3 --task-id 1 --status delayed --completion-result \"客户没接电话\" --next-action \"明天下午再次联系\"",
+    "add_training_record": "python scripts/startup_os_db.py add-training-record --db startup_os.sqlite3 --trainee \"张三\" --training-topic \"销售话术\"",
+    "add_knowledge_card": "python scripts/startup_os_db.py add-knowledge-card --db startup_os.sqlite3 --title \"经验卡\" --notes \"可复用经验\"",
+    "evening_review": "python scripts/startup_os_db.py evening-review --db startup_os.sqlite3",
+    "weekly_review": "python scripts/startup_os_db.py weekly-review --db startup_os.sqlite3",
+    "industry_playbook": "python scripts/startup_os_db.py industry-playbook --db startup_os.sqlite3",
+    "knowledge_brief": "python scripts/startup_os_db.py knowledge-brief --db startup_os.sqlite3",
+    "secretary_flow": "python scripts/startup_os_db.py secretary-flow --db startup_os.sqlite3",
+    "task_followup_brief": "python scripts/startup_os_db.py task-followup-brief --db startup_os.sqlite3",
+    "tomorrow_priorities": "python scripts/startup_os_db.py tomorrow-priorities --db startup_os.sqlite3",
+    "proactive_secretary": "python scripts/startup_os_db.py proactive-secretary --db startup_os.sqlite3",
+    "decision_advisor": "python scripts/startup_os_db.py decision-advisor --db startup_os.sqlite3",
+    "boss_cockpit": "python scripts/startup_os_db.py boss-cockpit --db startup_os.sqlite3",
+    "profile_completion_brief": "python scripts/startup_os_db.py profile-completion-brief --db startup_os.sqlite3",
+    "sop_opportunity_brief": "python scripts/startup_os_db.py sop-opportunity-brief --db startup_os.sqlite3",
+    "usage_test_plan": "python scripts/startup_os_db.py usage-test-plan --db startup_os.sqlite3",
+    "boss_preferences": "python scripts/startup_os_db.py boss-preferences --db startup_os.sqlite3",
+    "record_correction": "python scripts/startup_os_db.py record-correction --db startup_os.sqlite3 --text \"不是客户，是人脉\"",
+    "correction_brief": "python scripts/startup_os_db.py correction-brief --db startup_os.sqlite3",
+    "next_best_questions": "python scripts/startup_os_db.py next-best-questions --db startup_os.sqlite3",
+    "execution_closure_brief": "python scripts/startup_os_db.py execution-closure-brief --db startup_os.sqlite3",
+    "advice_quality_check": "python scripts/startup_os_db.py advice-quality-check --db startup_os.sqlite3 --text \"今天推进重点客户\"",
+    "first_use_guide": "python scripts/startup_os_db.py first-use-guide --db startup_os.sqlite3",
+    "unknown_topic_learning_card": "python scripts/startup_os_db.py unknown-topic-learning-card --db startup_os.sqlite3 --text \"系统没收录的问题\"",
+    "run_assistant_action_samples": "python scripts/run_assistant_action_samples.py"
+  }
+}
