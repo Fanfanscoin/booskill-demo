@@ -1,5 +1,6 @@
 import argparse
 import json
+import re
 import sqlite3
 from datetime import date
 
@@ -13,6 +14,15 @@ CREATE TABLE IF NOT EXISTS customers (id INTEGER PRIMARY KEY AUTOINCREMENT, name
 CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, relation_type TEXT DEFAULT '', notes TEXT DEFAULT '', created_at TEXT DEFAULT '', updated_at TEXT DEFAULT '');
 CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, owner TEXT DEFAULT '', due_date TEXT DEFAULT '', status TEXT DEFAULT 'todo', notes TEXT DEFAULT '', created_at TEXT DEFAULT '', updated_at TEXT DEFAULT '');
 """
+
+INDUSTRY_EXAMPLES = {
+    "餐饮": ["记录每个意向客户预算、城市、店型、最担心的问题。", "跟进话术先问回本周期、选址能力、资金准备。"],
+    "教育": ["记录家长孩子年龄、学科、痛点、试听时间。", "跟进重点放在效果承诺、老师稳定性和课程节奏。"],
+    "美业": ["记录客户项目偏好、消费频次、生日和禁忌。", "复购提醒围绕护理周期和重要节日前维护。"],
+    "本地生活": ["记录商家品类、客单价、投流预算、团购平台。", "优先跟进近期有活动节点的商家。"],
+    "企业服务": ["记录决策人、预算、采购流程、痛点和竞品。", "下一步动作要明确资料、会议、报价和回款节点。"],
+    "自媒体": ["记录账号平台、内容方向、发布时间和转化目标。", "每周复盘选题、完播、互动、私信和成交。"],
+}
 
 
 def init_db(db):
@@ -64,14 +74,15 @@ def export_data(db):
 
 
 def first_use_guide():
-    return """我是 BossSkill 老板经营秘书。你可以先这样用：
+    return """我是 BossSkill 老板经营秘书。你可以直接用一句话开始：
 
-1. 建客户：python scripts\\startup_os_db.py add-customer --name "李总" --status "高意向" --next-followup "2026-05-12" --text "做餐饮加盟，预算5万，关心回本周期"
-2. 建员工：python scripts\\startup_os_db.py add-team-member --name "张三" --role "销售" --text "执行力可以，成交话术弱"
-3. 建任务：python scripts\\startup_os_db.py add-task --title "周三跟进李总预算" --owner "张三" --due-date "2026-05-12"
-4. 看简报：python scripts\\startup_os_db.py daily-brief
-5. 一句话老板秘书：python scripts\\startup_os_db.py assistant-action --text "今天帮我看看哪些客户需要跟进"
+1. 记客户：python scripts\\startup_os_db.py quick-add --text "李总是客户，做餐饮加盟，预算5万，5月12日再跟进"
+2. 记员工：python scripts\\startup_os_db.py quick-add --text "张三是销售，执行力可以，成交话术弱"
+3. 记人脉：python scripts\\startup_os_db.py quick-add --text "王总是朋友，懂本地生活投流，以后获客问题可以请教"
+4. 记任务：python scripts\\startup_os_db.py quick-add --text "提醒张三5月12日跟进李总预算"
+5. 看简报：python scripts\\startup_os_db.py daily-brief
 
+免费版能记录客户、员工、人脉、任务，并生成基础今日简报。
 授权版会开放更强的老板秘书判断、行业打法、客户跟进话术、团队诊断和持续学习知识库。
 授权联系 Telegram: fanfans555"""
 
@@ -157,6 +168,79 @@ def list_table(db, table):
         return [dict(row) for row in conn.execute(f"SELECT * FROM {table} ORDER BY id DESC LIMIT 50").fetchall()]
 
 
+def detect_name(text):
+    identity_match = re.search(r"([\u4e00-\u9fa5A-Za-z]{1,8})是(?:客户|员工|销售|运营|朋友|人脉|同学|合作伙伴)", text)
+    if identity_match:
+        return identity_match.group(1)
+    match = re.search(r"([\u4e00-\u9fa5A-Za-z]{1,8}(?:总|经理|老师|哥|姐|先生|女士)?)", text)
+    return match.group(1) if match else ""
+
+
+def detect_date(text):
+    iso = re.search(r"(20\d{2}-\d{1,2}-\d{1,2})", text)
+    if iso:
+        return iso.group(1)
+    month_day = re.search(r"(\d{1,2})月(\d{1,2})日", text)
+    if month_day:
+        return f"{date.today().year}-{int(month_day.group(1)):02d}-{int(month_day.group(2)):02d}"
+    return ""
+
+
+def quick_add(db, text):
+    name = detect_name(text)
+    due_date = detect_date(text)
+    if any(word in text for word in ["提醒", "任务", "安排"]):
+        title = text
+        owner_match = re.search(r"提醒([\u4e00-\u9fa5A-Za-z]{1,8})", text)
+        args = argparse.Namespace(title=title, owner=owner_match.group(1) if owner_match else "", due_date=due_date, status="todo", text=text)
+        result = add_task(db, args)
+        result["detected_type"] = "task"
+        result["confidence"] = "medium"
+        return result
+    if any(word in text for word in ["员工", "销售", "运营", "组长", "客服", "导师"]):
+        role = next((word for word in ["销售", "运营", "组长", "客服", "导师"] if word in text), "")
+        args = argparse.Namespace(name=name or "未命名员工", role=role, text=text)
+        result = add_team_member(db, args)
+        result["detected_type"] = "team_member"
+        result["confidence"] = "medium"
+        return result
+    if any(word in text for word in ["朋友", "人脉", "资源", "同学", "合作伙伴"]):
+        relation = next((word for word in ["朋友", "人脉", "同学", "合作伙伴"] if word in text), "人脉")
+        args = argparse.Namespace(name=name or "未命名人脉", relation_type=relation, text=text)
+        result = add_contact(db, args)
+        result["detected_type"] = "contact"
+        result["confidence"] = "medium"
+        return result
+    if any(word in text for word in ["客户", "预算", "意向", "成交", "报价", "方案", "跟进"]):
+        status = "高意向" if any(word in text for word in ["高意向", "想买", "要买", "成交"]) else ""
+        args = argparse.Namespace(name=name or "未命名客户", owner="", status=status, next_followup=due_date, text=text)
+        result = add_customer(db, args)
+        result["detected_type"] = "customer"
+        result["confidence"] = "medium"
+        return result
+    return {
+        "intent": "need_clarification",
+        "question": "这是客户、员工、任务，还是其他人脉？",
+        "text": text,
+        "tip": "你可以补一句：这是客户 / 这是员工 / 这是人脉 / 这是任务。",
+    }
+
+
+def priority_customer(customer):
+    score = 0
+    reasons = []
+    if customer.get("next_followup") and customer["next_followup"] <= today():
+        score += 3
+        reasons.append("跟进已到期")
+    if "高" in customer.get("status", ""):
+        score += 2
+        reasons.append("意向较高")
+    if "预算" in customer.get("notes", ""):
+        score += 1
+        reasons.append("已有预算信息")
+    return score, reasons
+
+
 def local_daily_brief(db):
     data = export_data(db)
     today_text = today()
@@ -168,13 +252,26 @@ def local_daily_brief(db):
         customer for customer in data["customers"]
         if customer.get("next_followup") and customer.get("next_followup") <= today_text
     ]
+    ranked_customers = sorted(
+        [
+            {
+                **customer,
+                "priority_score": priority_customer(customer)[0],
+                "priority_reason": priority_customer(customer)[1],
+                "next_action": f"今天联系{customer.get('name')}，确认当前顾虑、预算和下一步决策时间。",
+                "suggested_script": f"{customer.get('name')}您好，我今天主要想确认下您现在最关心的是预算、效果还是落地周期？我根据这个给您安排下一步方案。",
+            }
+            for customer in data["customers"]
+        ],
+        key=lambda item: item["priority_score"],
+        reverse=True,
+    )
     return {
-        "title": "BossSkill 今日简报",
+        "title": "BossSkill 今日老板简报",
         "today": today_text,
-        "must_handle": {
-            "due_tasks": due_tasks,
-            "customer_followups": followups,
-        },
+        "summary": f"当前有 {len(due_tasks)} 个到期任务，{len(followups)} 个到期客户跟进。",
+        "today_priority": ranked_customers[:3],
+        "due_tasks": due_tasks,
         "counts": {
             "customers": len(data["customers"]),
             "team_members": len(data["team_members"]),
@@ -182,21 +279,40 @@ def local_daily_brief(db):
             "tasks": len(data["tasks"]),
         },
         "suggested_action": [
-            "先处理到期任务和到期客户跟进。",
-            "每完成一个任务，补充完成结果。",
-            "客户信息缺失时，优先补充需求、预算、顾虑和下次跟进时间。",
+            "先处理今日到期客户，再处理到期任务。",
+            "每次跟进后记录客户反馈、顾虑、下次时间。",
+            "如果客户、员工或人脉信息缺失，今天只补一个最关键字段。",
         ],
-        "upgrade_hint": "授权版可根据客户记录生成跟进策略、话术、团队动作和经营诊断。授权联系 Telegram: fanfans555",
+        "upgrade_preview": commercial_preview("daily-brief"),
     }
+
+
+def commercial_preview(command):
+    examples = {
+        "assistant-action": "授权版示例：我会自动判断这句话是在建客户、建任务还是做复盘，并生成下一步动作、跟进话术和是否需要提醒。",
+        "industry-playbook": "授权版示例：如果你做餐饮加盟，我会输出7天获客动作、客户筛选问题、跟进话术和成交复盘表。",
+        "team-brief": "授权版示例：我会根据员工任务结果判断谁需要授权、谁需要训练、谁需要一对一沟通。",
+    }
+    return {
+        "message": examples.get(command, "授权版会生成更完整的诊断、话术、任务和复盘方案。"),
+        "contact": "Telegram: fanfans555",
+        "activate_command": "python scripts\\startup_os_db.py activate-license --db startup_os.sqlite3 --license-key YOUR_LICENSE_KEY",
+    }
+
+
+def industry_examples(keyword):
+    if not keyword:
+        return INDUSTRY_EXAMPLES
+    matched = {name: items for name, items in INDUSTRY_EXAMPLES.items() if keyword in name}
+    return matched or {"未匹配": ["可以告诉我行业名称，我会按客户、销售、交付、团队四块给你拆问题。"]}
 
 
 def license_required(command):
     return {
         "intent": "license_required",
         "command": command,
-        "message": "这个能力属于授权版。免费版可使用 add-customer、add-team-member、add-contact、add-task、daily-brief 和 export。",
-        "activate_command": "python scripts\\startup_os_db.py activate-license --db startup_os.sqlite3 --license-key YOUR_LICENSE_KEY",
-        "contact": "Telegram: fanfans555",
+        "message": "这个能力属于授权版。免费版可使用 quick-add、add-customer、add-team-member、add-contact、add-task、daily-brief 和 export。",
+        "preview": commercial_preview(command),
     }
 
 
@@ -215,6 +331,7 @@ def main():
     parser.add_argument("--title")
     parser.add_argument("--due-date")
     parser.add_argument("--table")
+    parser.add_argument("--industry")
     args = parser.parse_args()
     init_db(args.db)
     if args.command == "init":
@@ -232,6 +349,10 @@ def main():
         return
     if args.command == "export":
         print_json(export_data(args.db))
+        return
+    if args.command == "quick-add":
+        require_args(args, ["text"])
+        print_json(quick_add(args.db, args.text))
         return
     if args.command == "add-customer":
         require_args(args, ["name"])
@@ -254,6 +375,9 @@ def main():
         return
     if args.command in {"daily-brief", "brief"}:
         print_json(local_daily_brief(args.db))
+        return
+    if args.command == "industry-examples":
+        print_json(industry_examples(args.industry or ""))
         return
     if not check_license(args.db, args.command).get("allowed"):
         print_json(license_required(args.command))
