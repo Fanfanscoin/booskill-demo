@@ -38,6 +38,7 @@
   "default_commands": {
     "init_database": "python scripts/startup_os_db.py init --db startup_os.sqlite3",
     "first_use_guide": "python scripts/startup_os_db.py first-use-guide --db startup_os.sqlite3",
+    "help": "python scripts/startup_os_db.py 帮助 --db startup_os.sqlite3",
     "activate_license": "python scripts/startup_os_db.py activate-license --db startup_os.sqlite3 --license-key YOUR_LICENSE_KEY",
     "license_status": "python scripts/startup_os_db.py license-status --db startup_os.sqlite3",
     "export_memory": "python scripts/startup_os_db.py export --db startup_os.sqlite3",

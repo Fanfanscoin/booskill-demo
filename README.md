@@ -31,6 +31,8 @@ Telegram: fanfans555
 无授权时保留基础能力：
 
 - 首次使用引导
+- 项目诊断入口
+- 详细帮助说明
 - 一句话记录客户、员工、人脉、任务
 - 基础客户记录
 - 基础团队记录
@@ -57,6 +59,18 @@ Telegram: fanfans555
 
 ```powershell
 python scripts\startup_os_db.py first-use-guide --db startup_os.sqlite3
+```
+
+详细帮助：
+
+```powershell
+python scripts\startup_os_db.py 帮助 --db startup_os.sqlite3
+```
+
+项目诊断：
+
+```text
+我做餐饮加盟，客户是想开店的创业者，现在有咨询但成交少，帮我诊断一下
 ```
 
 一句话记录客户：
