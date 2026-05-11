@@ -188,5 +188,6 @@ python scripts\startup_os_db.py assistant-action --db startup_os.sqlite3 --text 
 - 有没有可复制话术？
 - 有没有需要追问的关键信息？
 - 有没有可沉淀的客户、员工、人脉、任务或知识？
+- 如果记录了生日，是否提醒用户生日当天和前三天会出现在今日简报？
 
 如果没有，就重写。

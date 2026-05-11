@@ -122,6 +122,7 @@ def help_text():
 你可以说：
 - 李总是客户，做餐饮加盟，预算5万，5月12日跟进。
 - 刘总是客户，做建材加盟，预算15万，关心回本周期。
+- 李总生日5月14日，喜欢喝茶。
 
 三、记录员工
 你可以说：
@@ -132,6 +133,7 @@ def help_text():
 你可以说：
 - 王总懂本地生活投流，获客问题可以请教他。
 - 赵律师是朋友，合同问题可以咨询。
+- 王总生日8月20日，喜欢打高尔夫。
 
 五、记录任务
 你可以说：
@@ -143,6 +145,7 @@ def help_text():
 - 今天有什么要跟进的？
 - 今天有哪些待办？
 - 帮我生成今日老板简报。
+- 生日前三天会在今日简报里提醒你准备祝福或维护动作。
 
 七、授权版能做什么
 授权后可以使用：
@@ -246,13 +249,69 @@ def detect_name(text):
 
 
 def detect_date(text):
+    text_without_birthday = re.sub(r"生日[是:： ]*(20\d{2}-)?\d{1,2}[-月]\d{1,2}日?", "", text or "")
     iso = re.search(r"(20\d{2}-\d{1,2}-\d{1,2})", text)
     if iso:
         return iso.group(1)
-    month_day = re.search(r"(\d{1,2})月(\d{1,2})日", text)
+    month_day = re.search(r"(\d{1,2})月(\d{1,2})日", text_without_birthday)
     if month_day:
         return f"{date.today().year}-{int(month_day.group(1)):02d}-{int(month_day.group(2)):02d}"
     return ""
+
+
+def detect_birthday(text):
+    if not text or "生日" not in text:
+        return ""
+    iso = re.search(r"生日[是:： ]*(20\d{2}-)?(\d{1,2})[-月](\d{1,2})日?", text)
+    if iso:
+        return f"{int(iso.group(2)):02d}-{int(iso.group(3)):02d}"
+    month_day = re.search(r"生日[是:： ]*(\d{1,2})月(\d{1,2})日?", text)
+    if month_day:
+        return f"{int(month_day.group(1)):02d}-{int(month_day.group(2)):02d}"
+    return ""
+
+
+def days_until_month_day(month_day, today_value):
+    try:
+        month, day = [int(part) for part in month_day.split("-", 1)]
+        target = date(today_value.year, month, day)
+    except ValueError:
+        return None
+    if target < today_value:
+        target = date(today_value.year + 1, month, day)
+    return (target - today_value).days
+
+
+def birthday_reminders(data, today_value):
+    reminders = []
+    sources = [
+        ("customer", "客户", data["customers"]),
+        ("team_member", "员工", data["team_members"]),
+        ("contact", "人脉", data["contacts"]),
+    ]
+    for source_type, source_label, rows in sources:
+        for row in rows:
+            birthday = detect_birthday(" ".join([row.get("notes", ""), row.get("status", ""), row.get("relation_type", "")]))
+            days_left = days_until_month_day(birthday, today_value) if birthday else None
+            if days_left is None or days_left > 3:
+                continue
+            if days_left == 0:
+                timing = "今天生日"
+                action = f"今天给{row.get('name')}发一句生日祝福，最好结合你们的关系和最近业务进展。"
+            else:
+                timing = f"距离生日还有{days_left}天"
+                action = f"提前准备{row.get('name')}的生日祝福或维护动作。"
+            reminders.append({
+                "type": source_type,
+                "role": source_label,
+                "name": row.get("name"),
+                "birthday": birthday,
+                "days_left": days_left,
+                "timing": timing,
+                "suggested_action": action,
+                "script": f"{row.get('name')}，生日快乐！祝你新的一年顺顺利利，最近有需要我帮忙的地方也随时跟我说。",
+            })
+    return sorted(reminders, key=lambda item: item["days_left"])
 
 
 def quick_add(db, text):
@@ -312,7 +371,8 @@ def priority_customer(customer):
 
 def local_daily_brief(db):
     data = export_data(db)
-    today_text = today()
+    today_value = date.today()
+    today_text = today_value.isoformat()
     due_tasks = [
         task for task in data["tasks"]
         if task.get("status") != "done" and task.get("due_date") and task.get("due_date") <= today_text
@@ -341,6 +401,7 @@ def local_daily_brief(db):
         "summary": f"当前有 {len(due_tasks)} 个到期任务，{len(followups)} 个到期客户跟进。",
         "today_priority": ranked_customers[:3],
         "due_tasks": due_tasks,
+        "birthday_reminders": birthday_reminders(data, today_value),
         "counts": {
             "customers": len(data["customers"]),
             "team_members": len(data["team_members"]),
@@ -349,6 +410,7 @@ def local_daily_brief(db):
         },
         "suggested_action": [
             "先处理今日到期客户，再处理到期任务。",
+            "如果有生日提醒，提前准备祝福或维护动作。",
             "每次跟进后记录客户反馈、顾虑、下次时间。",
             "如果客户、员工或人脉信息缺失，今天只补一个最关键字段。",
         ],

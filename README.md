@@ -39,6 +39,7 @@ Telegram: fanfans555
 - 基础人脉记录
 - 基础任务记录
 - 今日老板简报
+- 生日提前三天提醒
 - 行业样例提示
 
 ## 授权版能力
@@ -77,6 +78,12 @@ python scripts\startup_os_db.py 帮助 --db startup_os.sqlite3
 
 ```powershell
 python scripts\startup_os_db.py quick-add --db startup_os.sqlite3 --text "李总是客户，做餐饮加盟，预算5万，5月12日再跟进"
+```
+
+记录生日后，生日当天和前三天会在今日简报里提醒：
+
+```powershell
+python scripts\startup_os_db.py quick-add --db startup_os.sqlite3 --text "李总是客户，生日5月14日，喜欢喝茶"
 ```
 
 一句话记录员工：
