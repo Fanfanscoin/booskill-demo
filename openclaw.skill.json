@@ -42,6 +42,7 @@
     "advice_calibration": "python scripts/startup_os_db.py advice-calibration --db startup_os.sqlite3 --text \"这个建议有效，因为客户愿意继续推进\"",
     "secretary_rhythm": "python scripts/startup_os_db.py secretary-rhythm --db startup_os.sqlite3",
     "boss_loop_v2": "python scripts/startup_os_db.py boss-loop-v2 --db startup_os.sqlite3",
+    "tomorrow_command_plan": "python scripts/startup_os_db.py tomorrow-command-plan --db startup_os.sqlite3",
     "conversation_intelligence": "python scripts/startup_os_db.py conversation-intelligence --db startup_os.sqlite3 --text \"李总今天说预算有点高，想再看看案例，下周三再聊\"",
     "daily_brief": "python scripts/startup_os_db.py daily-brief --db startup_os.sqlite3",
     "industry_examples": "python scripts/startup_os_db.py industry-examples --db startup_os.sqlite3 --industry \"餐饮\"",

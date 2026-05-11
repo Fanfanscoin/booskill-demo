@@ -31,6 +31,7 @@ COMMERCIAL_COMMANDS = {
     "advice-calibration",
     "secretary-rhythm",
     "boss-loop-v2",
+    "tomorrow-command-plan",
     "record-correction",
     "correction-brief",
     "next-best-questions",
