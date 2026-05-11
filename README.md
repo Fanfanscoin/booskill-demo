@@ -62,6 +62,7 @@ Telegram: fanfans555
 - 团队用人建议：授权、训练、纠偏、观察和淘汰预警。
 - 老板操作系统：早上定重点、白天追执行、晚上复盘、每周看指标。
 - 商业交付体系：首次上手、7天测试、续费价值证明。
+- 经营智能体内核 V1：business-brain、action-closure-engine、memory-graph、risk-prediction-brief、value-report。
 
 简单边界：
 
