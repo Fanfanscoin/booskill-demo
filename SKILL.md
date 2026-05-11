@@ -205,3 +205,12 @@ python scripts\startup_os_db.py assistant-action --db startup_os.sqlite3 --text 
 - 如果记录了生日，是否提醒用户生日当天和前三天会出现在今日简报？
 
 如果没有，就重写。
+## 授权版：对话经营情报
+
+当用户已经授权，并且描述日常工作事件时，可以调用云端对话经营情报：
+
+```powershell
+python scripts\startup_os_db.py conversation-intelligence --db startup_os.sqlite3 --text "李总今天说预算有点高，想再看看案例，下周三再聊"
+```
+
+这个能力用于把普通对话沉淀为客户、团队、任务、知识卡和每日简报信号。公开客户端不要暴露商业核心源码，只通过授权后的云端服务调用。

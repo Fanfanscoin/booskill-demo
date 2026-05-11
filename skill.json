@@ -49,6 +49,7 @@
     "find_helper": "python scripts/startup_os_db.py find-helper --db startup_os.sqlite3 --keyword \"投流\"",
     "add_task": "python scripts/startup_os_db.py add-task --db startup_os.sqlite3 --title \"周三跟进李总预算\" --owner \"张三\" --due-date \"2026-05-12\"",
     "assistant_action": "python scripts/startup_os_db.py assistant-action --db startup_os.sqlite3 --text \"今天帮我看看哪些客户需要跟进\"",
+    "conversation_intelligence": "python scripts/startup_os_db.py conversation-intelligence --db startup_os.sqlite3 --text \"李总今天说预算有点高，想再看看案例，下周三再聊\"",
     "daily_brief": "python scripts/startup_os_db.py daily-brief --db startup_os.sqlite3",
     "industry_examples": "python scripts/startup_os_db.py industry-examples --db startup_os.sqlite3 --industry \"餐饮\"",
     "deep_industry_pack": "python scripts/startup_os_db.py deep-industry-pack --db startup_os.sqlite3",
