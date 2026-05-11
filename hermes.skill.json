@@ -10,7 +10,7 @@
     "telegram": "fanfans555",
     "wechat": "fanfans555"
   },
-  "recommended_bootstrap_prompt": "请读取 SKILL.md 作为主规则。先判断用户问题属于客户、团队、任务、经营指标、复盘、行业打法还是知识库沉淀，再给出可执行方案。建议必须包含动作、对象、负责人、时间、指标或验收标准中的至少三项。",
+  "recommended_bootstrap_prompt": "请读取 SKILL.md 作为主规则。默认先直接对话，不要每句话都调用本地脚本，减少 approve 打扰。只有用户明确要求记录、查询、生成、更新、导出、激活授权、查看简报、查找人脉或创建任务时，才调用命令。普通经营咨询、客户话术、团队建议、创业诊断先直接给可执行方案。建议必须包含动作、对象、负责人、时间、指标或验收标准中的至少三项。",
   "memory": {
     "mode": "local-first",
     "database": "sqlite",
