@@ -174,7 +174,7 @@ def cloud_enabled():
     return os.environ.get("BOOSKILL_CORE_MODE", "cloud").lower() != "local"
 
 
-def core_payload(command, db_path, args, db_export):
+def core_payload(command, db_path, args, db_export=None):
     command_args = {
         "project_id": getattr(args, "project_id", None),
         "name": getattr(args, "name", None),
@@ -190,11 +190,11 @@ def core_payload(command, db_path, args, db_export):
     return {
         "command": command,
         "args": {key: value for key, value in command_args.items() if value not in [None, ""]},
-        "db_export": db_export,
         "license_key": read_license_key(db_path),
         "machine_id": machine_id(),
+        "privacy_mode": "no_local_database_upload",
     }
 
 
-def run_cloud_core(command, db_path, args, db_export):
+def run_cloud_core(command, db_path, args, db_export=None):
     return request_core("/run", core_payload(command, db_path, args, db_export))

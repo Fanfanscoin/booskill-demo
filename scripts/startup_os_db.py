@@ -683,7 +683,7 @@ def main():
     if not check_license(args.db, args.command).get("allowed"):
         print_json(license_required(args.command))
         return
-    response = run_cloud_core(args.command, args.db, args, export_data(args.db))
+    response = run_cloud_core(args.command, args.db, args)
     print(response.get("output") or json.dumps(response, ensure_ascii=False, indent=2))
 
 
