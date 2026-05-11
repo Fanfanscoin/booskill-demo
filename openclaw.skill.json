@@ -5,7 +5,7 @@
   "version": "0.2.0-commercial-client",
   "entry": "SKILL.md",
   "install_source": "https://github.com/Fanfanscoin/booskill-demo.git",
-  "description": "面向创业者和老板的经营秘书与训练顾问，帮助管理客户、团队、任务、复盘、人情维护和经营动作。免费版提供基础记录、生日纪念日提醒和关系维护提醒；授权版通过云端开放商业核心能力。",
+  "description": "面向创业者和老板的经营秘书与训练顾问。免费版提供基础记录、基础简报和关系提醒；授权版开放经营判断、主动秘书、行业作战包、长期记忆、任务闭环、客户经营、团队用人建议、老板操作系统和商业交付体系。",
   "license_contact": {
     "telegram": "fanfans555"
   },

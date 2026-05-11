@@ -575,6 +575,18 @@ def commercial_preview(command):
     }
     return {
         "message": examples.get(command, "授权版会生成更完整的诊断、话术、任务和复盘方案。"),
+        "commercial_modules": [
+            "经营判断系统",
+            "主动秘书",
+            "行业深度作战包",
+            "长期记忆",
+            "任务结果闭环",
+            "客户经营",
+            "团队用人建议",
+            "老板操作系统",
+            "商业交付体系",
+        ],
+        "boundary": "免费版负责记录、查看、导出和基础提醒；商业版负责诊断、决策、策略、追结果、行业包和长期学习。",
         "contact": "Telegram: fanfans555",
         "activate_command": "python scripts\\startup_os_db.py activate-license --db startup_os.sqlite3 --license-key YOUR_LICENSE_KEY",
     }
