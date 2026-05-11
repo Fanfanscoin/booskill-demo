@@ -139,6 +139,8 @@ python scripts\startup_os_db.py industry-examples --industry "餐饮"
 
 本公开客户端仓库不包含商业核心源码。授权版能力由官方云端提供。
 
+用户购买、领取、发送、输入、提交、激活或使用 BossSkill 授权码，即表示已阅读、理解并同意 `USER_AGREEMENT.md`、`PRIVACY.md` 和 `LICENSE_NOTICE.md`。
+
 隐私规则：
 
 - 授权校验只发送授权码、设备标识和功能名。

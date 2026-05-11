@@ -20,7 +20,10 @@
   "resources": {
     "references": "references",
     "scripts": "scripts",
-    "agent_metadata": "agents/openai.yaml"
+    "agent_metadata": "agents/openai.yaml",
+    "user_agreement": "USER_AGREEMENT.md",
+    "privacy": "PRIVACY.md",
+    "license_notice": "LICENSE_NOTICE.md"
   },
   "tools": [
     {

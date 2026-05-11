@@ -16,6 +16,11 @@
     "schema_reference": "references/sqlite-database.md",
     "export_command": "python scripts/startup_os_db.py export --db startup_os.sqlite3"
   },
+  "legal": {
+    "user_agreement": "USER_AGREEMENT.md",
+    "privacy": "PRIVACY.md",
+    "license_notice": "LICENSE_NOTICE.md"
+  },
   "commands": {
     "init_database": "python scripts/startup_os_db.py init --db startup_os.sqlite3",
     "first_use_guide": "python scripts/startup_os_db.py first-use-guide --db startup_os.sqlite3",

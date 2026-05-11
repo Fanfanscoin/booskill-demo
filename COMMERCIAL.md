@@ -1,3 +1,7 @@
+﻿## 授权码协议确认
+
+用户购买、领取、发送、输入、提交、激活或使用 BossSkill 授权码，即表示已阅读、理解并同意 `USER_AGREEMENT.md`、`PRIVACY.md` 和 `LICENSE_NOTICE.md`。
+
 # BossSkill 商业版授权说明
 
 当前商业版只区分两种状态：
@@ -78,3 +82,4 @@ python scripts\startup_os_db.py conversation-intelligence --db startup_os.sqlite
 ```
 
 该能力由官方云端商业核心提供，公开客户端只保留授权、基础记录和云端调用入口。
+

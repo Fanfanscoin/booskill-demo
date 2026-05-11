@@ -11,6 +11,9 @@
   },
   "startup_instruction": "读取 SKILL.md 作为主规则。用户提出经营问题时，先分类，再给出可执行动作。输出应尽量包含动作、对象、负责人、时间、指标或验收标准，不输出空泛大道理。",
   "resources": [
+    "USER_AGREEMENT.md",
+    "PRIVACY.md",
+    "LICENSE_NOTICE.md",
     "references/checklists.md",
     "references/sqlite-database.md",
     "references/task-reminder-system.md",

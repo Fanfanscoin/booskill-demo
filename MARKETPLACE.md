@@ -31,6 +31,8 @@ BossSkill 老板经营秘书
 
 免费版提供基础记录能力；授权版开放云端商业核心能力。
 
+用户购买、领取、发送、输入、提交、激活或使用 BossSkill 授权码，即表示已阅读、理解并同意 `USER_AGREEMENT.md`、`PRIVACY.md` 和 `LICENSE_NOTICE.md`。
+
 授权联系：
 
 ```text
