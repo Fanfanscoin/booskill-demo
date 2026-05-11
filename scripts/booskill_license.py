@@ -30,6 +30,7 @@ COMMERCIAL_COMMANDS = {
     "evening-review-v2",
     "advice-calibration",
     "secretary-rhythm",
+    "boss-loop-v2",
     "record-correction",
     "correction-brief",
     "next-best-questions",
