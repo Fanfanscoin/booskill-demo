@@ -40,6 +40,12 @@ Telegram: fanfans555
 - 基础任务记录
 - 今日老板简报
 - 生日提前三天提醒
+- 纪念日提前三天提醒
+- 沉默客户提醒
+- 重要客户/人脉维护提醒
+- 员工一对一沟通提醒
+- 节日和关系维护话术模板
+- 按关键词查找可协助的人脉
 - 行业样例提示
 
 ## 授权版能力
@@ -86,6 +92,12 @@ python scripts\startup_os_db.py quick-add --db startup_os.sqlite3 --text "李总
 python scripts\startup_os_db.py quick-add --db startup_os.sqlite3 --text "李总是客户，生日5月14日，喜欢喝茶"
 ```
 
+记录纪念日、沉默客户或重要关系后，今日简报会自动提醒：
+
+```powershell
+python scripts\startup_os_db.py quick-add --db startup_os.sqlite3 --text "李总是客户，结婚纪念日5月13日，最近没回消息，是重要客户"
+```
+
 一句话记录员工：
 
 ```powershell
@@ -96,6 +108,12 @@ python scripts\startup_os_db.py quick-add --db startup_os.sqlite3 --text "张三
 
 ```powershell
 python scripts\startup_os_db.py quick-add --db startup_os.sqlite3 --text "王总是朋友，懂本地生活投流，以后获客问题可以请教"
+```
+
+按关键词查找可以帮忙的人：
+
+```powershell
+python scripts\startup_os_db.py find-helper --db startup_os.sqlite3 --keyword "投流"
 ```
 
 一句话记录任务：

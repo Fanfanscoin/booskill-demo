@@ -249,7 +249,7 @@ def detect_name(text):
 
 
 def detect_date(text):
-    text_without_birthday = re.sub(r"生日[是:： ]*(20\d{2}-)?\d{1,2}[-月]\d{1,2}日?", "", text or "")
+    text_without_birthday = re.sub(r"(?:生日|结婚纪念日|合作周年|签约日|孩子生日|公司成立日|开业日|纪念日)[是:： ]*(20\d{2}-)?\d{1,2}[-月]\d{1,2}日?", "", text or "")
     iso = re.search(r"(20\d{2}-\d{1,2}-\d{1,2})", text)
     if iso:
         return iso.group(1)
@@ -312,6 +312,149 @@ def birthday_reminders(data, today_value):
                 "script": f"{row.get('name')}，生日快乐！祝你新的一年顺顺利利，最近有需要我帮忙的地方也随时跟我说。",
             })
     return sorted(reminders, key=lambda item: item["days_left"])
+
+
+def detect_important_dates(text):
+    events = []
+    labels = ["结婚纪念日", "合作周年", "签约日", "孩子生日", "公司成立日", "开业日", "纪念日"]
+    for label in labels:
+        pattern = rf"{label}[是:： ]*(20\d{{2}}-)?(\d{{1,2}})[-月](\d{{1,2}})日?"
+        for match in re.finditer(pattern, text or ""):
+            event = {
+                "event": label,
+                "date": f"{int(match.group(2)):02d}-{int(match.group(3)):02d}",
+            }
+            if event not in events:
+                events.append(event)
+    specific_events = [item for item in events if item["event"] != "纪念日"]
+    if specific_events:
+        specific_dates = {item["date"] for item in specific_events}
+        events = [item for item in events if item["event"] != "纪念日" or item["date"] not in specific_dates]
+    return events
+
+
+def important_date_reminders(data, today_value):
+    reminders = []
+    sources = [
+        ("customer", "客户", data["customers"]),
+        ("team_member", "员工", data["team_members"]),
+        ("contact", "人脉", data["contacts"]),
+    ]
+    for source_type, source_label, rows in sources:
+        for row in rows:
+            text = " ".join([row.get("notes", ""), row.get("status", ""), row.get("relation_type", "")])
+            for event in detect_important_dates(text):
+                days_left = days_until_month_day(event["date"], today_value)
+                if days_left is None or days_left > 3:
+                    continue
+                name = row.get("name")
+                reminders.append({
+                    "type": source_type,
+                    "role": source_label,
+                    "name": name,
+                    "event": event["event"],
+                    "date": event["date"],
+                    "days_left": days_left,
+                    "timing": f"今天是{event['event']}" if days_left == 0 else f"距离{event['event']}还有{days_left}天",
+                    "suggested_action": f"给{name}准备一条围绕{event['event']}的问候，不要推销，先维护关系。",
+                    "script": f"{name}，刚想起快到{event['event']}了，祝你这段时间一切顺利。有需要我搭把手的地方也随时说。",
+                })
+    return sorted(reminders, key=lambda item: item["days_left"])
+
+
+def silent_customer_reminders(customers):
+    keywords = ["沉默", "没回", "不回", "联系不上", "失联", "未回复"]
+    reminders = []
+    for customer in customers:
+        text = " ".join([customer.get("status", ""), customer.get("notes", "")])
+        if any(word in text for word in keywords):
+            name = customer.get("name")
+            reminders.append({
+                "name": name,
+                "reason": "客户近期反馈变少或未回复",
+                "next_action": "今天只做低压力触达，先关心近况，再给一个明确的小问题。",
+                "script": f"{name}您好，我先不打扰您太久。之前那个事情您现在是想继续了解，还是先放一放？我这边好按您的节奏安排。",
+            })
+    return reminders[:5]
+
+
+def relationship_maintenance_reminders(data):
+    keywords = ["重要", "高价值", "关键", "核心", "VIP", "老客户"]
+    reminders = []
+    for customer in data["customers"]:
+        text = " ".join([customer.get("status", ""), customer.get("notes", "")])
+        if any(word in text for word in keywords) and not customer.get("next_followup"):
+            reminders.append({
+                "type": "customer",
+                "name": customer.get("name"),
+                "reason": "重要客户未设置下次跟进时间",
+                "suggested_action": "建议设置 30 天内的维护任务，并补充最近需求变化。",
+            })
+    for contact in data["contacts"]:
+        text = " ".join([contact.get("relation_type", ""), contact.get("notes", "")])
+        if any(word in text for word in keywords):
+            reminders.append({
+                "type": "contact",
+                "name": contact.get("name"),
+                "reason": "重要人脉建议定期维护",
+                "suggested_action": "建议 30 天维护一次：问近况、给价值、必要时再请教具体问题。",
+            })
+    return reminders[:5]
+
+
+def one_on_one_reminders(team_members):
+    keywords = ["逾期", "不稳定", "弱", "低", "拖延", "情绪", "冲突", "复盘不稳定"]
+    reminders = []
+    for member in team_members:
+        text = " ".join([member.get("role", ""), member.get("notes", "")])
+        if any(word in text for word in keywords):
+            name = member.get("name")
+            reminders.append({
+                "name": name,
+                "reason": "员工画像里出现执行、能力或状态风险",
+                "suggested_action": "安排一次 15 分钟一对一，只谈一个问题、一个标准、一个下次动作。",
+                "talk_outline": [
+                    f"先问{name}：最近哪个动作最卡？",
+                    "再确认：你希望公司给什么支持？",
+                    "最后定：下次复盘看哪个具体结果？",
+                ],
+            })
+    return reminders[:5]
+
+
+def greeting_templates():
+    return [
+        {
+            "scene": "节日问候",
+            "script": "最近节奏应该也挺满的，祝你节日顺心，工作和生活都稳稳当当。有需要我帮忙的地方随时说。",
+        },
+        {
+            "scene": "客户维护",
+            "script": "最近项目推进还顺利吗？我这边想顺手问一句，有没有哪个环节需要我帮你看一下。",
+        },
+        {
+            "scene": "人脉请教",
+            "script": "最近我遇到一个具体问题，想请教你 10 分钟。方便的话我把问题整理成三句话发你，不耽误你太多时间。",
+        },
+    ]
+
+
+def find_helper(db, keyword):
+    data = export_data(db)
+    keyword = (keyword or "").strip()
+    matches = []
+    for contact in data["contacts"]:
+        haystack = " ".join([contact.get("name", ""), contact.get("relation_type", ""), contact.get("notes", "")])
+        if not keyword or keyword in haystack:
+            matches.append({
+                "id": contact.get("id"),
+                "name": contact.get("name"),
+                "relation_type": contact.get("relation_type"),
+                "matched_by": keyword or "all",
+                "notes": contact.get("notes"),
+                "suggested_action": "先发近况问候，再提出一个具体、低成本的协助请求。",
+            })
+    return {"keyword": keyword, "matches": matches[:10]}
 
 
 def quick_add(db, text):
@@ -402,6 +545,11 @@ def local_daily_brief(db):
         "today_priority": ranked_customers[:3],
         "due_tasks": due_tasks,
         "birthday_reminders": birthday_reminders(data, today_value),
+        "important_date_reminders": important_date_reminders(data, today_value),
+        "silent_customer_reminders": silent_customer_reminders(data["customers"]),
+        "relationship_maintenance": relationship_maintenance_reminders(data),
+        "one_on_one_reminders": one_on_one_reminders(data["team_members"]),
+        "greeting_templates": greeting_templates(),
         "counts": {
             "customers": len(data["customers"]),
             "team_members": len(data["team_members"]),
@@ -410,7 +558,8 @@ def local_daily_brief(db):
         },
         "suggested_action": [
             "先处理今日到期客户，再处理到期任务。",
-            "如果有生日提醒，提前准备祝福或维护动作。",
+            "如果有生日或纪念日提醒，提前准备祝福或维护动作。",
+            "重要客户和重要人脉没有下次动作时，今天先补一个维护任务。",
             "每次跟进后记录客户反馈、顾虑、下次时间。",
             "如果客户、员工或人脉信息缺失，今天只补一个最关键字段。",
         ],
@@ -463,6 +612,7 @@ def main():
     parser.add_argument("--due-date")
     parser.add_argument("--table")
     parser.add_argument("--industry")
+    parser.add_argument("--keyword")
     args = parser.parse_args()
     init_db(args.db)
     if args.command == "init":
@@ -509,6 +659,9 @@ def main():
         return
     if args.command in {"daily-brief", "brief"}:
         print_json(local_daily_brief(args.db))
+        return
+    if args.command in {"find-helper", "find-contact"}:
+        print_json(find_helper(args.db, args.keyword or args.text or ""))
         return
     if args.command == "industry-examples":
         print_json(industry_examples(args.industry or ""))
