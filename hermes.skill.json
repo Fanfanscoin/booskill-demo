@@ -39,6 +39,9 @@
     "deep_industry_pack": "python scripts/startup_os_db.py deep-industry-pack --db startup_os.sqlite3",
     "customer_followup_strategy": "python scripts/startup_os_db.py customer-followup-strategy --db startup_os.sqlite3",
     "team_diagnosis_deep": "python scripts/startup_os_db.py team-diagnosis-deep --db startup_os.sqlite3",
+    "execution_score": "python scripts/startup_os_db.py execution-score --db startup_os.sqlite3",
+    "execution_training_plan": "python scripts/startup_os_db.py execution-training-plan --db startup_os.sqlite3 --name \"张三\"",
+    "execution_risk_brief": "python scripts/startup_os_db.py execution-risk-brief --db startup_os.sqlite3",
     "task_review_chaser": "python scripts/startup_os_db.py task-review-chaser --db startup_os.sqlite3",
     "metric_diagnosis_deep": "python scripts/startup_os_db.py metric-diagnosis-deep --db startup_os.sqlite3",
     "knowledge_growth_brief": "python scripts/startup_os_db.py knowledge-growth-brief --db startup_os.sqlite3"
