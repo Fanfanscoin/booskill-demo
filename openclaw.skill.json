@@ -7,7 +7,8 @@
   "install_source": "https://github.com/Fanfanscoin/booskill-demo.git",
   "description": "面向创业者和老板的经营秘书与训练顾问。免费版提供基础记录、基础简报和关系提醒；授权版开放经营判断、主动秘书、行业作战包、长期记忆、任务闭环、客户经营、团队用人建议、老板操作系统和商业交付体系。",
   "license_contact": {
-    "telegram": "fanfans555"
+    "telegram": "fanfans555",
+    "wechat": "fanfans555"
   },
   "startup_instruction": "读取 SKILL.md 作为主规则。用户提出经营问题时，先分类，再给出可执行动作。输出应尽量包含动作、对象、负责人、时间、指标或验收标准，不输出空泛大道理。",
   "resources": [
@@ -34,6 +35,7 @@
     "add_task": "python scripts/startup_os_db.py add-task --db startup_os.sqlite3 --title \"周三跟进李总预算\" --owner \"张三\" --due-date \"2026-05-12\"",
     "find_helper": "python scripts/startup_os_db.py find-helper --db startup_os.sqlite3 --keyword \"投流\"",
     "assistant_action": "python scripts/startup_os_db.py assistant-action --db startup_os.sqlite3 --text \"今天帮我看看哪些客户需要跟进\"",
+    "engine_link_brief": "python scripts/startup_os_db.py engine-link-brief --db startup_os.sqlite3",
     "conversation_intelligence": "python scripts/startup_os_db.py conversation-intelligence --db startup_os.sqlite3 --text \"李总今天说预算有点高，想再看看案例，下周三再聊\"",
     "daily_brief": "python scripts/startup_os_db.py daily-brief --db startup_os.sqlite3",
     "industry_examples": "python scripts/startup_os_db.py industry-examples --db startup_os.sqlite3 --industry \"餐饮\"",
@@ -59,5 +61,5 @@
     "industry_playbook",
     "knowledge_learning"
   ],
-  "commercial_notice": "本公开客户端仓库不包含商业核心源码。授权联系 Telegram: fanfans555。"
+  "commercial_notice": "本公开客户端仓库不包含商业核心源码。授权联系 Telegram: fanfans555；微信号: fanfans555。"
 }

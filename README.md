@@ -38,6 +38,7 @@ https://github.com/Fanfanscoin/booskill-demo.git
 
 ```text
 Telegram: fanfans555
+微信号: fanfans555
 ```
 
 ## 免费版能力

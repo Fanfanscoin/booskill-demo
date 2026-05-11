@@ -15,4 +15,5 @@
 
 ```text
 Telegram: fanfans555
+微信号: fanfans555
 ```

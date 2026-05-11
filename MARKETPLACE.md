@@ -37,6 +37,7 @@ BossSkill 老板经营秘书
 
 ```text
 Telegram: fanfans555
+微信号: fanfans555
 ```
 
 ## 安装地址

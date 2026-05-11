@@ -102,7 +102,7 @@ def first_use_guide():
 
 想看更详细说明，可以输入：帮助 或 Help。
 授权版会开放更强的老板秘书判断、行业打法、客户跟进策略、团队诊断和持续学习知识库。
-授权联系 Telegram: fanfans555"""
+授权联系 Telegram: fanfans555；微信号: fanfans555"""
 
 
 def help_text():
@@ -156,7 +156,7 @@ def help_text():
 - 任务复盘自动追问
 - 长期知识库沉淀
 
-授权联系 Telegram: fanfans555"""
+授权联系 Telegram: fanfans555；微信号: fanfans555"""
 
 
 def insert_record(db, table, values):
@@ -589,7 +589,7 @@ def commercial_preview(command):
             "经营智能体内核V1",
         ],
         "boundary": "免费版负责记录、查看、导出和基础提醒；商业版负责诊断、决策、策略、主动扫描、主动追问、跨模块诊断、行业包和长期学习。",
-        "contact": "Telegram: fanfans555",
+        "contact": "Telegram: fanfans555；微信号: fanfans555",
         "activate_command": "python scripts\\startup_os_db.py activate-license --db startup_os.sqlite3 --license-key YOUR_LICENSE_KEY",
     }
 

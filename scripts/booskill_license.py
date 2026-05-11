@@ -15,6 +15,7 @@ LICENSE_CACHE_HOURS = int(os.environ.get("BOOSKILL_LICENSE_CACHE_HOURS", "72"))
 
 COMMERCIAL_COMMANDS = {
     "assistant-action",
+    "engine-link-brief",
     "conversation-intelligence",
     "secretary-flow",
     "proactive-secretary",

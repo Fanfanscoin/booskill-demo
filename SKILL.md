@@ -152,6 +152,7 @@ python scripts\startup_os_db.py industry-examples --industry "餐饮"
 
 ```text
 Telegram: fanfans555
+微信号: fanfans555
 ```
 
 可用命令：
